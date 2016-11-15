@@ -12,9 +12,11 @@ TARGET = scanner_table
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp \
+    gerenciador_janelas.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    gerenciador_janelas.h
 
-FORMS    += mainwindow.ui
+FORMS    += \
+    janela_principal.ui
