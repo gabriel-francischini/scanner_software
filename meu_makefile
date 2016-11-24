@@ -1,22 +1,133 @@
-all: janela_principal.h
+#	Esse arquivo é um makefile
+#	
+#	Makefile são arquivos que explicam quais comandos devem
+#	ser executados no prompt de comando/shell para compilar um projeto
+#	do zero. São úteis para a organização de um projeto. Por exemplo:
+#		
+#		1	meu_executavel.exe: main.cpp main.h
+#		2	<tab> echo "Criando o meu_executavel"
+#
+#	Essas duas linhas de makefile significam que: (linha 1) o arquivo
+# 	"meu_executavel.exe" é criado a partir dos arquivos main.cpp e main.h
+#	(em outras palavras, toda vez que "main.h" e "main.cpp" forem modificados
+#	o arquivo "meu_executavel.exe" deve ser re-criado ou atualizado) e (linha 2)
+#	que o comando executado para criar o arquivo "meu_executavel.exe" é 
+#	'echo "Criando o meu_executavel"'. Outro exemplo:
+#
+#		1	texto_aleatorio.txt:
+#		2	<tab> echo "esse comando cria um arquivo de text com este texto" > texto_aleatorio.txt
+#		3	
+#		4	novo_texto_aleatorio.txt: texto_aleatorio.txt
+#		5	<tab> rm texto_aleatorio.txt
+#		6	<tab> echo "novo texto aleatorio" > novo_texto_aleatorio.txt
+#
+#	Se você digitasse "make --makefile=(nome do arquivo acima) texto_aleatorio.txt" no
+#	prompt de comando, ele iria verificar se o arquivo "texto_aleatorio.txt" (linha 1) existe ou se ele
+#	está atualizado. Caso não esteja, o programa executaria os comandos descritos na linhas seguintes (linha 2).
+#	Mas caso você executasse "make --makefile=(nome do arquivo acima) novo_texto_aleatorio.txt" ele executaria
+# 	a linha 4: verificaria se o arquivo "novo_texto_aleatorio.txt" E se ele é mais recente que o arquivo 
+#	"texto_aleatorio.txt". Caso não existisse, executaria SIMULTANEAMENTE as linhas 5 e 6 no prompt de comando.
+#	É importante frisar que para cada linha diferente ele abre simultaneamente um prompt de comando novo e executa os comandos,
+#	com o objetivo de tornar mais rápido o processo de compilação.
+#
+#
+#	De forma geral, uma "regra" (como é chamado cada arquivo) é definida como:
 
-# As duas linhas a seguir compilam os arquivos .ui necessários
+#			Arquivo_Resultado_1 Arquivo_Resultado_2 (...) Arquivo_Resultado_N : Dependencia_1 Dependencia_2 (...) Dependencia_M
+#			<tab> comando1
+#			<tab> comando2
+#				.
+#				.
+#				.
+#			<tab> comando_L
+#
+#	Para cada dependência, os arquivos resultados devem ser mais recentes que a dependencia (i.e. devem estar atualizados)
+#	ou caso não estejam (por exemplo, caso alguém escreva mais código em uma das dependencias) então os comandos serão executados.
+#
+#	As vezes é útil que um "arquivo-resultado" de um processo de make não seja um arquivo de fato, ou seja, a regra defina uma
+#	rotina a ser executada e não um arquivo de fato. Como não é um arquivo de fato, não é possível comparar a data de modificação
+#	entre o "arquivo-resultado" e as dependências. É importante colocar em algum ponto do arquivo a seguinte linha:
+
+#			.PHONY regra1 regra2 regra3 ... regraN
+#	
+#	Para indicar que certas regras representam PROCESSOS, e não ARQUIVOS.
+##	Para executar qualquer regra, basta navegar até a pasta do Makefile e digitar:
+
+#			make --makefile=(nome do makefile) (regra a ser executada)
+#
+#
+#	Em alguns momentos, também é útil definir regras sem definir comandos. Por exemplo:
+#
+#		1	felicidade.txt:	dinheiro.txt familia.txt saude.txt
+#		2	
+#		3	dinheiro.txt:
+#		4	<tab> echo "Dinheiro é importante" > dinheiro.txt
+#		5
+#		6	familia.txt:
+#		7	<tab> echo "Família é mais importante ainda" > familia.txt
+#		8
+#		9	saude.txt: dinheiro.txt
+#		10	<tab> echo "Mas ter família e não ter saúde não é bom" > saude.txt
+#		11		
+#
+#	Indica que o arquivo "felicidade.txt" depende dos arquivos "dinheiro.txt", "familia.txt" e "saude.txt".
+#	O Make então irá verificar as regras de cada arquivo e executar os comandos de acordo.
+#	Rodar "make --makefile=(nome do arquivo) felicidade.txt" iria tentar criar o arquivo "felicidade.txt",
+#	para isso teria que checar os arquivos dos quais felicidade.txt depende e executar seus comandos.
+#
+#
+#	Todo comentário em make começa em um '#' e vai até o fim da linha
+#	Com exceção do tab inicial que marca comandos, o make ignora a diferença de espaços em branco 
+#	como por exemplo o caractere de nova linha ou vários espaços seguidos.	Para quebrar um longo 
+#	comando em dois pedaços, digita-se uma barra seguida de nova linha (\\\n) p.e. \
+#	Tais barras no final da linha indicam que o comando não terminou. Devem ser colocadas exatamente no fim da linha.  
+#	
+
+
+# ESTE PROJETO É FEITO EM QT 5.7 E DEVE PREFERENCIALMENTE SER COMPILADO EM UM WINDOWS 7
+
+
+# 'all' é uma forma fácil de compilar TODOS os arquivos necessários
+# que precisam ser atualizados
+
+all: janela_principal.h apontar_banco_de_dados.h
+
+
+
+# Os comandos a seguir compilam os arquivos .ui necessários
 # transformando-os em .h
-janela_principal.h: janela_principal.ui
-	uic janela_principal.ui -o janela_principal.h
+
+# A janela principal tem seu layout feito no Qt Designer para acelerar o processo de produção
+janela_principal.h: janela_principal.ui 
+
+	# Todas as compilações de arquivos .ui seguem o molde abaixo
+	uic janela_principal.ui -o janela_principal.h  
+
+# Similar à regra janela_principal.h
+apontar_banco_de_dados.h: apontar_banco_de_dados.ui
+	uic apontar_banco_de_dados.ui -o apontar_banco_de_dados.h
 
 
-
-
+# Esse é um processo para limpar arquivos gerados
+# automaticamente
 clean:
 	rm janela_principal.h
+	rm apontar_banco_de_dados.h
+	rm ui_janela_principal.h
+	rm ui_apontar_banco_de_dados.h
 
+# Processo para limpar o diretório no qual é compilada a versão de debug
 clean_debug:
 	rm debug/*
 
+# Processo para limpar o diretório no qual é compilada a versão de relase
 clean_release:
 	rm release/*	
 
+# Processo de limpeza antes de atualizar com o repositório de controle de versionamento
+# Isso é importante para não colocar acidentalmente outros arquivos que não o código puro no
+# software de versionamento.  Apesar de não ser algo errado subir o binário junto com o código,
+# é uma boa prática de organização separá-los.
 git:
 	del Makefile
 	del Makefile.Debug
@@ -24,4 +135,108 @@ git:
 	rmdir /S /Q debug
 	rmdir /S /Q release
 
-.PHONY: all clean clean_debug clean_release git
+# Esse longo comando cria um .rar contendo todo o binário final e o código fonte
+deploy: gerenciador_janelas.cpp gerenciador_janelas.h janela_principal.h
+
+#	Abaixo tem um código de uma uma linha só MUITO longo, então ele será quebrado em múltiplas linhas
+#	e comentado posteriormente
+
+	del /F /Q ..\deploy\scanners-gabriel-windows-version.rar && \
+	qmake && \
+	mingw32-make release && \
+	mingw32-make clean && \
+	mkdir "..\deploy\Gerenciador de Scanners" && \
+	copy .\release\scanner_table.exe /B "..\deploy\Gerenciador de Scanners\Gerenciador de Scanners.exe" /B /V && \
+	del /F /Q .\debug\*  && \
+	del /F /Q .\release\*  && \
+	rmdir /S /Q debug  && \
+	rmdir /S /Q release  && \
+	cd "..\deploy\Gerenciador de Scanners"  && \
+	windeployqt "Gerenciador de Scanners.exe"  && \
+	mkdir "src" && \
+	xcopy /S "..\..\src\*" ".\src\*" && \
+	mkdir "deploy" && \
+	copy ..\deploy.bat .\deploy\deploy.bat  && \
+	cd ..  && \
+	winrar a -r "scanners-gabriel-windows-version.zip" "Gerenciador de Scanners"\*  && \
+	rmdir /S /Q "Gerenciador de Scanners"
+
+
+#	Cada comando acima será repetido nos comentários abaixo, precedido de um $
+#	e um comentário sobre o comando. Além disso, terá a sequência usual de "&& \",
+#	que indica que a linha seguinte é, na verdade, a mesma linha, e que o que segue é um comando
+#	para ser executado em seguida 
+
+#	 Primeiro, garantimos que o .rar anterior foi delatado para não termos problemas
+#	$	del /F /Q ..\deploy\scanners-gabriel-windows-version.rar && \
+
+#	Temos que gerar os arquivos make automáticos necessários para o Qt funcionar
+#	$	qmake && \
+
+#	 Compilamos o código de release e limpamos o diretório, para não ter arquivos intermediários
+#	 ou temporários dentro do rar final.
+#	$	mingw32-make release && \
+#	$	mingw32-make clean && \
+
+#	 Criamos uma pasta no diretório de deploy, que compactaremos para dentro de um arquivo .rar
+#	 posteriormente (é boa prática colocar os arquivos dentro de uma pasta e não direto no própio
+#	 .rar em si). Aspas são necessárias pois o nome da pasta tem espaços
+#	$	mkdir "..\deploy\Gerenciador de Scanners" && \
+
+#	 Copiamos o arquivo .exe gerado pelo processo de compilação para a nossa nova pasta
+#	$	copy .\release\scanner_table.exe /B "..\deploy\Gerenciador de Scanners\Gerenciador de Scanners.exe" /B /V && \
+	
+#	 Deletamos a pasta de debug e release pois iremos copiar TODO o código da pasta atual
+#	 para dentro de uma pasta no .rar final (i.e. providenciamos o código-fonte junto ao binário)
+#	$	del /F /Q .\debug\*  && \
+#	$	del /F /Q .\release\*  && \
+#	$	rmdir /S /Q debug  && \
+#	$	rmdir /S /Q release  && \
+
+#	 Agora executaremos comandos dentro da nossa pasta que será compactada
+#	$		cd "..\deploy\Gerenciador de Scanners"  && \
+
+#	 Copiamos todas as dlls necessárias para o funcionamento do programa
+#	 criando inclusive os diretórios necessários
+#	$		windeployqt "Gerenciador de Scanners.exe"  && \
+
+#	 Criamos uma pasta chamada "src" para conter todo o código fonte
+#	$		mkdir "src" && \
+
+#	 Copiamos para dentro da pasta do código fonte TODO o conteúdo da pasta de código fonte
+#	 É importante observar que esse comando presume a seguinte estrutura de arquivos atual:
+#	
+#		.. -- Raiz da instalação
+#		..\src\
+#		..\src\<Pastas Contendo o Código Fonte>
+#		..\deploy\
+#		..\deploy\deploy.bat -- Arquivo que gera automaticamente um binário a partir do código na pasta ..\src\
+#		..\deploy\Gerenciador de Scanners\ -- Pasta Atual, que será compactada
+#		..\deploy\Gerenciador de Scanners\Gerenciador de Scanners.exe -- Binário final
+#		..\deploy\Gerenciador de Scanners\<Dlls e estrura de arquivos necessários para rodar o binário>
+#	
+#	$		xcopy /S "..\..\src\*" ".\src\*" && \
+
+#		Cria o diretório deploy na pasta que será compactada
+#	$		mkdir "deploy" && \
+
+#	 Copia o arquivo de deploy para uma pasta semelhante dentro do arquivo que será compactado
+#	$		copy ..\deploy.bat .\deploy\deploy.bat  && \
+
+#	 Sobe para o diretório ..\deploy\ para poder compactar a pasta "Gerenciador de Scanners",
+#	 que contém, além do binário, cópias da estrutura de diretórios e do código fonte necessários
+#	 para compilar pessoalmente o software do zero.
+#	$		cd ..  && \
+
+#	 Criar um .rar a partir da pasta "Gerenciador de Scanners"
+#	 Caso alguém quisesse distribuir o software em algum outro formato, bastaria
+#	 editar esta única linha
+#	$		winrar a -r "scanners-gabriel-windows-version.zip" "Gerenciador de Scanners"\*  && \
+
+#	 Remove a pasta, para não ficar sobrando arquivos e poder distribuir o .rar puro
+#	$		rmdir /S /Q "Gerenciador de Scanners" 
+
+
+
+# Indica quais regras são processos, não representando arquivos reais
+.PHONY: all clean clean_debug clean_release git deploy
