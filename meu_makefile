@@ -99,8 +99,7 @@ all: janela_principal.h apontar_banco_de_dados.h
 
 # A janela principal tem seu layout feito no Qt Designer para acelerar o processo de produção
 janela_principal.h: janela_principal.ui 
-
-	# Todas as compilações de arquivos .ui seguem o molde abaixo
+# Todas as compilações de arquivos .ui seguem o molde abaixo
 	uic janela_principal.ui -o janela_principal.h  
 
 # Similar à regra janela_principal.h
@@ -147,7 +146,9 @@ deploy: gerenciador_janelas.cpp gerenciador_janelas.h janela_principal.h
 	mingw32-make clean && \
 	mkdir "..\deploy\Gerenciador de Scanners" && \
 	copy .\release\scanner_table.exe /B "..\deploy\Gerenciador de Scanners\Gerenciador de Scanners.exe" /B /V && \
+	copy .\release\chinook.db /B "..\deploy\Gerenciador de Scanners\exemblo_db.sqlite3" /B /V && \
 	del /F /Q .\debug\*  && \
+	
 	del /F /Q .\release\*  && \
 	rmdir /S /Q debug  && \
 	rmdir /S /Q release  && \

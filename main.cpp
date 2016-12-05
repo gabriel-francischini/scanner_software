@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
     // Criamos o nosso gerenciador de janelas
     GerenciadorWidgets gerenciadorWidgets;
 
-
     // Deixamos o gerenciador de janelas visível
     gerenciadorWidgets.show();
 
@@ -34,6 +33,7 @@ int main(int argc, char *argv[])
     // Ocultamos a barra de ferramentas pois ela
     // ainda não está finalizada e funcional
     gerenciadorWidgets.esconderBarraDeFerramentas();
+
 
     return a.exec();
 }
