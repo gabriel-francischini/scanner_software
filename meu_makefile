@@ -146,9 +146,8 @@ deploy: gerenciador_janelas.cpp gerenciador_janelas.h janela_principal.h
 	mingw32-make clean && \
 	mkdir "..\deploy\Gerenciador de Scanners" && \
 	copy .\release\scanner_table.exe /B "..\deploy\Gerenciador de Scanners\Gerenciador de Scanners.exe" /B /V && \
-	copy .\release\chinook.db /B "..\deploy\Gerenciador de Scanners\exemblo_db.sqlite3" /B /V && \
+	copy .\chinook.db /B "..\deploy\Gerenciador de Scanners\exemblo_db.sqlite3" /B /V && \
 	del /F /Q .\debug\*  && \
-	
 	del /F /Q .\release\*  && \
 	rmdir /S /Q debug  && \
 	rmdir /S /Q release  && \

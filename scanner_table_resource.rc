@@ -4,7 +4,7 @@
 #  include <windows.h>
 # endif
 
-IDI_ICON1	ICON	DISCARDABLE	"D:/dev/projects/qt/scanner_table/src/resources/icon.ico"
+IDI_ICON1	ICON	DISCARDABLE	"D:\\dev\\projects\\qt\\scanner_table\\src\\resources\\icon.ico"
 
 VS_VERSION_INFO VERSIONINFO
 	FILEVERSION 0,0,0,0
